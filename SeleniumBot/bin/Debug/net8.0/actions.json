@@ -1,0 +1,45 @@
+[
+  {
+    "action": "click",
+    "id": "cmpbntyestxt",
+    "value": "",
+    "description": "click Acceppt cookies"
+  },
+  {
+    "action": "click",
+    "linkText": "Bitte loggen Sie sich hier ein",
+    "description": "Click on login option"
+  },
+  {
+    "action": "send_keys",
+    "id": "login_email_username",
+    "value": "philipp.tir28@gmail.com",
+    "description": "Send Username textfield"
+  },
+  {
+    "action": "send_keys",
+    "id": "login_password",
+    "value": "Teuto1920",
+    "description": "Send Password textfield"
+  },
+  {
+    "action": "click",
+    "id": "login_submit",
+    "description": "Click login button"
+  },
+  {
+    "action": "wait",
+    "timespan": "5000",
+    "description": "Wait for 5 seconds"
+  },
+  {
+    "action": "click",
+    "id": "update_offer",
+    "description": "Click update"
+  },
+  {
+    "action": "wait",
+    "timespan": "10000",
+    "description": "Wait for 10 seconds"
+  }
+]

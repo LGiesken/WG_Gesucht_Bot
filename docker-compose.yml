@@ -1,0 +1,34 @@
+﻿services:
+  seleniumbot:
+    image: ghcr.io/lgiesken/seleniumbot:latest
+    container_name: seleniumbot
+    environment:
+      USERNAME: ${USERNAME}
+      PASSWORD: ${PASSWORD}
+      ENTRY_IDS: ${ENTRY_IDS}
+      MIN_WAIT: ${MIN_WAIT}
+      MAX_WAIT: ${MAX_WAIT}
+    command: >
+      --username ${USERNAME}
+      --password ${PASSWORD}
+      --entryIds ${ENTRY_IDS}
+      --minWait ${MIN_WAIT}
+      --maxWait ${MAX_WAIT}
+    depends_on:
+      - selenium-hub
+
+  selenium-hub:
+    image: selenium/hub:4.23.0
+    container_name: selenium-hub
+    ports:
+      - "4444:4444"
+
+  chrome:
+    image: selenium/node-chrome:4.23.0
+    volumes:
+      - /dev/shm:/dev/shm
+    depends_on:
+      - selenium-hub
+    environment:
+      HUB_HOST: selenium-hub
+      HUB_PORT: 4444
