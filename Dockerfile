@@ -1,39 +1,42 @@
-﻿# Basis-Image
-FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
-WORKDIR /app
-
+﻿# 1. Basis-Image für das Build-Environment
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy csproj und restore
-COPY SeleniumBot/SeleniumBot.csproj SeleniumBot/
-RUN dotnet restore SeleniumBot/SeleniumBot.csproj
+# Nur csproj zuerst kopieren und Wiederherstellen (bessere Caching-Effizienz)
+COPY SeleniumBot/*.csproj ./SeleniumBot/
+RUN dotnet restore ./SeleniumBot/SeleniumBot.csproj
 
-# Copy alles und build
-COPY . .
+# Restlichen Code kopieren
+COPY SeleniumBot/. ./SeleniumBot/
+
+# Build
 WORKDIR /src/SeleniumBot
 RUN dotnet publish -c Release -o /app/publish
 
-# Runtime-Image
+# 2. Runtime-Image
 FROM mcr.microsoft.com/dotnet/runtime:8.0
 WORKDIR /app
 
-# Chrome & ChromeDriver installieren
-RUN apt-get update && apt-get install -y wget gnupg unzip \
-    && wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /usr/share/keyrings/google-chrome.gpg \
-    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
-    && apt-get update \
-    && apt-get install -y google-chrome-beta \
+# Abhängigkeiten installieren (Chrome + Treiber)
+RUN apt-get update && apt-get install -y wget unzip curl gnupg \
     && rm -rf /var/lib/apt/lists/*
 
-# ChromeDriver installieren
-RUN wget -q https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/139.0.7258.0/linux64/chromedriver-linux64.zip \
+# Google Chrome installieren
+RUN curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-linux.gpg \
+    && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-linux.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
+    && apt-get update \
+    && apt-get install -y google-chrome-stable \
+    && rm -rf /var/lib/apt/lists/*
+
+# Selenium ChromeDriver Version 139 installieren
+RUN wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/139.0.7258.0/linux64/chromedriver-linux64.zip \
     && unzip chromedriver-linux64.zip \
     && mv chromedriver-linux64/chromedriver /usr/local/bin/ \
     && chmod +x /usr/local/bin/chromedriver \
     && rm -rf chromedriver-linux64*
 
+# Veröffentlichtes Projekt kopieren
 COPY --from=build /app/publish .
 
-# Entrypoint
+# Entry point
 ENTRYPOINT ["dotnet", "SeleniumBot.dll"]

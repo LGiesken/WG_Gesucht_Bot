@@ -1,9 +1,15 @@
-﻿services:
+﻿version: '3.8'
+
+services:
   seleniumbot:
     image: ghcr.io/lgiesken/seleniumbot:latest
     container_name: seleniumbot
-    env_file:
-      - .env
+    environment:
+      USERNAME: ""      # In TrueNAS GUI setzen
+      PASSWORD: ""      # In TrueNAS GUI setzen
+      ENTRY_IDS: ""     # In TrueNAS GUI setzen
+      MIN_WAIT: "10"     # Standardwert, kann in TrueNAS GUI überschrieben werden
+      MAX_WAIT: "20"    # Standardwert, kann in TrueNAS GUI überschrieben werden
     command: >
       --username ${USERNAME}
       --password ${PASSWORD}

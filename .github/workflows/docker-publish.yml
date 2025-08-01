@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # optional: manuelles Starten
+  workflow_dispatch:
 
 jobs:
   build:
@@ -19,7 +19,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Docker Login to GitHub Container Registry
+      # 2. Docker Login to GHCR
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -27,14 +27,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 3. Build Docker Image
-      - name: Build Docker image
-        run: |
-          docker build \
-            -t ghcr.io/${{ github.repository_owner }}/seleniumbot:latest \
-            -f SeleniumBot/Dockerfile .
+      # 3. Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
-      # 4. Push Docker Image
-      - name: Push Docker image
+      # 4. Build and Push Docker Image
+      - name: Build and push Docker image
         run: |
-          docker push ghcr.io/${{ github.repository_owner }}/seleniumbot:latest
+          IMAGE_NAME=ghcr.io/lgiesken/seleniumbot
+          COMMIT_SHA=${GITHUB_SHA::7}
+
+          # Build & push with "latest" and commit-specific tag
+          docker buildx build \
+            --push \
+            -t $IMAGE_NAME:latest \
+            -t $IMAGE_NAME:$COMMIT_SHA \
+            -f Dockerfile .
