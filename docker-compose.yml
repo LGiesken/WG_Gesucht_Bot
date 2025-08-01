@@ -2,12 +2,8 @@
   seleniumbot:
     image: ghcr.io/lgiesken/seleniumbot:latest
     container_name: seleniumbot
-    environment:
-      USERNAME: ${USERNAME}
-      PASSWORD: ${PASSWORD}
-      ENTRY_IDS: ${ENTRY_IDS}
-      MIN_WAIT: ${MIN_WAIT}
-      MAX_WAIT: ${MAX_WAIT}
+    env_file:
+      - .env
     command: >
       --username ${USERNAME}
       --password ${PASSWORD}
