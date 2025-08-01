@@ -277,10 +277,33 @@ namespace SeleniumBot
             // Wait for a random interval between minDuration and maxDuration minutes
             int waitTime = random.Next(minDurationInMinutes, maxDurationInMinutes) * 60000;
             
-            Console.WriteLine("---------------------------------------------------------");
-            Console.WriteLine($"Waiting for {waitTime / 60000} minutes before next update.");
-            Console.WriteLine("---------------------------------------------------------");
-            Thread.Sleep(waitTime);
+            TimeZoneInfo berlinTimeZone = TimeZoneInfo.FindSystemTimeZoneById("W. Europe Standard Time"); 
+            DateTime berlinNow = TimeZoneInfo.ConvertTime(DateTime.Now, berlinTimeZone);
+            
+            DateTime berlinToday8AM = berlinNow.Date.AddHours(8);
+            DateTime berlinToday10PM = berlinNow.Date.AddHours(22);
+            
+            if (berlinNow >= berlinToday10PM || berlinNow < berlinToday8AM)
+            {
+                // Calculate the next 8 AM
+                DateTime next8AM = berlinNow < berlinToday8AM ? berlinToday8AM : berlinToday8AM.AddDays(1);
+
+                TimeSpan waitUntil8AM = next8AM - berlinNow;
+                int sleepUntil8AM = (int)waitUntil8AM.TotalMilliseconds;
+
+                Console.WriteLine("It's currently between 10 PM and 8 AM in Berlin.");
+                Console.WriteLine($"Sleeping until 8 AM ({waitUntil8AM.TotalMinutes:F0} minutes)...");
+                Thread.Sleep(sleepUntil8AM);
+
+                // After reaching 8 AM, add the random wait time
+                Console.WriteLine($"Now adding random wait time of {waitTime / 60000} minutes...");
+                Thread.Sleep(waitTime);
+            }
+            else
+            {
+                Console.WriteLine($"Waiting for {waitTime / 60000} minutes before next update.");
+                Thread.Sleep(waitTime);
+            }
         }
 
         static List<Action> LoadActions(string filePath)

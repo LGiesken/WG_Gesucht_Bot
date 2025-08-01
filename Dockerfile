@@ -28,8 +28,8 @@ RUN curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor
     && apt-get install -y google-chrome-stable \
     && rm -rf /var/lib/apt/lists/*
 
-# Selenium ChromeDriver Version 139 installieren
-RUN wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/139.0.7258.0/linux64/chromedriver-linux64.zip \
+# Selenium ChromeDriver Version 138 installieren
+RUN wget https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/138.0.7204.183/linux64/chromedriver-linux64.zip \
     && unzip chromedriver-linux64.zip \
     && mv chromedriver-linux64/chromedriver /usr/local/bin/ \
     && chmod +x /usr/local/bin/chromedriver \

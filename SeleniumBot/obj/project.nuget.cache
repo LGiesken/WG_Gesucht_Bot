@@ -1,12 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "S++BZuUAgKw=",
+  "dgSpecHash": "YNNkGWxP7V4=",
   "success": true,
   "projectFilePath": "C:\\Users\\lenna\\Documents\\Projekte\\WG_Gesucht_Bot\\SeleniumBot\\SeleniumBot.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\lenna\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\lenna\\.nuget\\packages\\selenium.webdriver\\4.23.0\\selenium.webdriver.4.23.0.nupkg.sha512",
-    "C:\\Users\\lenna\\.nuget\\packages\\selenium.webdriver.chromedriver\\138.0.7204.4900\\selenium.webdriver.chromedriver.138.0.7204.4900.nupkg.sha512",
+    "C:\\Users\\lenna\\.nuget\\packages\\selenium.webdriver.chromedriver\\138.0.7204.18300\\selenium.webdriver.chromedriver.138.0.7204.18300.nupkg.sha512",
     "C:\\Users\\lenna\\.nuget\\packages\\seleniumextras.waithelpers\\1.0.2\\seleniumextras.waithelpers.1.0.2.nupkg.sha512"
   ],
   "logs": []
